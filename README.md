@@ -1,3 +1,5 @@
+**Visit github page:** [Translator_v1_os](https://parthee-vijaya.github.io/Translator_v1_os/)
+
 # KK AI Translator
 
 A production-ready, bilingual translation platform with real-time speech transcription, AI-powered translation, and text-to-speech synthesis. Built with a Python Flask API backend and React frontend.
