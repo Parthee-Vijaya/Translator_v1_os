@@ -1,27 +1,24 @@
-**Visit github page:** [Translator_v1_os](https://parthee-vijaya.github.io/Translator_v1_os/)
-
 # KK AI Translator
 
-A production-ready, bilingual translation platform with real-time speech transcription, AI-powered translation, and text-to-speech synthesis. Built with a Python Flask API backend and React frontend.
+Et oversættelsesværktøj med taletransskription, AI-oversættelse og tekst-til-tale. Platformen består af en Python Flask API backend og en React frontend.
 
-**Perfect for:** Government services, healthcare, customer support, and any scenario requiring real-time bilingual communication.
+Platformen er udviklet til brug til hverdags tolkning/oversættelse. Løsningen er første version bygget i Kalundborg og baseret sig på modeller hosted i Azure (Whisper v3 og GPT4o). Whisper kan også køres lokalt og der kan bruges en lokal model som Mistral  (Kalundborg har en v2 som køre lokalt)
 
-## Features
+## Funktioner
 
-- **Real-time Speech Transcription** - Convert speech to text using Azure Speech Services or Whisper
-- **AI-Powered Translation** - Translate between 12+ languages using GPT-4o-mini or GPT-3.5
-- **Text-to-Speech** - Natural voice synthesis in 40+ languages via Azure Cognitive Services
-- **Session Management** - Track conversation history with full audit trails
-- **Bilingual Conversations** - Designed for two-way communication (e.g., citizen + caseworker)
-- **Session Recap** - AI-generated summaries of conversations in both languages
-- **REST API** - Full Swagger/OpenAPI documentation included
-- **Docker Ready** - Multi-stage builds for API-only or full-stack deployment
+- **Taletransskription** - Konverterer tale til tekst ved hjælp af Azure Speech Services eller Whisper
+- **AI-oversættelse** - Oversætter mellem 90+ sprog ved hjælp af GPT-4o eller lokal LLM
+- **Tekst-til-tale** - Stemmesyntese på 40+ sprog via Azure Cognitive Services
+- **Sessionstyring** - Sporer samtalehistorik med sessioner
+- **Sessionresumé** - Genererer sammenfatninger af samtaler på begge sprog
+- **REST API** - Swagger/OpenAPI dokumentation er inkluderet
+- **Docker support** - Multi-stage builds til API-only eller full-stack deployment
 
-## Supported Languages
+## Understøttede Sprog
 
-Out of the box, 15 languages are enabled by default:
+15 sprog er aktiveret som standard:
 
-| Language | Code |
+| Sprog | Kode |
 |----------|------|
 | Arabic (Saudi Arabia) | ar-SA |
 | Danish | da-DK |
@@ -39,31 +36,33 @@ Out of the box, 15 languages are enabled by default:
 | Turkish | tr-TR |
 | Ukrainian | uk-UA |
 
-**450+ additional languages** available via the Settings page - simply enable the languages you need from the Azure Speech Services voice list.
+Yderligere sprog kan aktiveres via Indstillingssiden. Alle sprog fra Azure Speech Services stemmeliste er tilgængelige.
 
-## Quick Start
+## Hurtig Start
 
-### Prerequisites
+### Forudsætninger
 
-- Docker and Docker Compose
-- Azure account with:
+- Docker og Docker Compose
+- Azure-konto med:
   - Cognitive Services (Speech)
-  - OpenAI Service (GPT models)
+  - OpenAI Service (GPT-modeller)
+- Lokalt
+Kræver hardware ala Nvidia L40s og køre bedst på en Linux maskine med vLLM
 
-### 1. Clone and Configure
+### 1. Klon og Konfigurer
 
 ```bash
 git clone https://github.com/kalundborgkommune/KK-AI-Translator-V1-OS.git
 cd KK-AI-Translator-V1-OS
 
-# Copy example environment file
+# Kopiér eksempel-miljøfil
 cp .env.example .env
 
-# Edit .env with your Azure credentials (required)
+# Rediger .env med dine Azure-legitimationsoplysninger (påkrævet)
 nano .env
 ```
 
-**Minimum required in `.env`:**
+**Påkrævet i `.env`:**
 ```bash
 AZURE_SPEECH_KEY=your_azure_speech_key
 AZURE_SPEECH_REGION=westeurope
@@ -71,137 +70,135 @@ AZURE_OPENAI_KEY=your_azure_openai_key
 MODEL_AZURE_GPT4OMINI_URL=https://your-resource.openai.azure.com/...
 ```
 
-### 2. Run with Docker Compose (Recommended)
+### 2. Kør med Docker Compose
 
 ```bash
 docker-compose up -d
 ```
 
-This starts:
-- The translator app (API + React frontend)
-- A MySQL database (auto-configured)
+Dette starter oversætter-appen (API + React frontend) og en MySQL database.
 
-Access at: **http://localhost:8080**
+Applikationen er tilgængelig på: **http://localhost:8080**
 
-API docs at: **http://localhost:8080/api/docs**
+API-dokumentation: **http://localhost:8080/api/docs**
 
-Settings page: **http://localhost:8080/settings**
+Indstillingsside: **http://localhost:8080/settings**
 
-### 3. Alternative: Run Without Docker
+### 3. Kør Uden Docker
 
 ```bash
-# Requires: Python 3.11+, Node.js 20+, MySQL database
+# Påkræver: Python 3.11+, Node.js 20+, MySQL database
 make dev
 ```
 
-See [SETUP.md](SETUP.md) for manual setup instructions.
+Se [SETUP.md](SETUP.md) for manuelle opsætningsinstruktioner.
 
-### 4. Standalone Docker (Without Compose)
+### 4. Docker Uden Compose
 
 ```bash
-# Build the image
+# Byg billedet
 make build-full
 
-# Run (requires external MySQL)
+# Kør (påkræver ekstern MySQL)
 make run-full
 ```
 
-## API Documentation
+## API Dokumentation
 
-Swagger UI is available at `/docs` when the server is running.
+Swagger UI er tilgængelig på `/docs` når serveren kører.
 
-### Key Endpoints
+### Endpoints
 
-| Endpoint | Method | Description |
+| Endpoint | Metode | Beskrivelse |
 |----------|--------|-------------|
-| `/api/v1/sessions/start-session` | POST | Create a new translation session |
-| `/api/v1/sessions/select-language` | POST | Set the source language for a session |
-| `/api/v1/sessions/translate` | POST | Transcribe and translate audio/text |
-| `/api/v1/sessions/transcribe` | POST | Transcribe audio to text only |
-| `/api/v1/sessions/tts` | POST | Convert text to speech |
-| `/api/v1/sessions/recap` | GET | Get AI summary of a session |
-| `/api/v1/sessions/available-languages` | GET | List supported languages |
-| `/api/v1/languages/` | GET | List all language settings |
-| `/api/v1/languages/seed` | POST | Seed languages from Azure voices |
-| `/api/v1/languages/bulk` | PUT | Bulk update language settings |
-| `/api/v1/misc/ping` | GET | Health check |
+| `/api/v1/sessions/start-session` | POST | Opret en ny oversættelsessession |
+| `/api/v1/sessions/select-language` | POST | Sæt kildesproget for en session |
+| `/api/v1/sessions/translate` | POST | Transskriber og oversæt lyd/tekst |
+| `/api/v1/sessions/transcribe` | POST | Transskriber kun lyd til tekst |
+| `/api/v1/sessions/tts` | POST | Konverter tekst til tale |
+| `/api/v1/sessions/recap` | GET | Få AI-sammenfatning af en session |
+| `/api/v1/sessions/available-languages` | GET | List understøttede sprog |
+| `/api/v1/languages/` | GET | List alle sprogindstillinger |
+| `/api/v1/languages/seed` | POST | Seed sprog fra Azure stemmer |
+| `/api/v1/languages/bulk` | PUT | Opdater sprogindstillinger i bulk |
+| `/api/v1/misc/ping` | GET | Sundhedstjek |
 
-### Authentication
+### Autentificering
 
-All API requests require authentication via one of:
+Alle API-forespørgsler kræver autentificering. Der er to muligheder:
 
-1. **API Key Header** (recommended for server-to-server):
+1. **API Key Header** (til server-til-server kommunikation):
    ```
    x-api-key: your-api-key
    ```
 
-2. **Bearer Token** (for Microsoft Entra ID integration):
+2. **Bearer Token** (til Microsoft Entra ID integration):
    ```
    Authorization: Bearer <jwt-token>
    ```
 
-## Project Structure
+## Projektstruktur
 
 ```
 kk-ai-translator/
 ├── python-be/                 # Flask Backend
 │   ├── src/
-│   │   ├── app.py            # Application entrypoint
-│   │   ├── auth/             # Authentication middleware
-│   │   ├── config/           # Configuration & language mappings
-│   │   ├── db/               # Database setup (SQLAlchemy)
-│   │   ├── models/           # ORM models (Session, Translation)
+│   │   ├── app.py            # Applikationsindgangspunkt
+│   │   ├── auth/             # Autentificeringsmiddleware
+│   │   ├── config/           # Konfiguration & sprogmapping
+│   │   ├── db/               # Database opsætning (SQLAlchemy)
+│   │   ├── models/           # ORM modeller (Session, Translation)
 │   │   ├── routes/           # API endpoints
-│   │   └── services/         # Business logic
+│   │   └── services/         # Forretningslogik
 │   └── tests/                # Pytest test suite
 │
 ├── react-fe/                  # React Frontend
 │   ├── src/
-│   │   ├── components/       # UI components
-│   │   ├── hooks/            # Custom React hooks
+│   │   ├── components/       # UI komponenter
+│   │   ├── hooks/            # Brugerdefinerede React hooks
 │   │   └── context/          # React context providers
 │   └── package.json
 │
 ├── Dockerfile                 # Full-stack Docker build
-├── docker-compose.yml         # Docker Compose for local development
-├── Makefile                   # Build & deployment automation
-└── .env.example              # Environment template
+├── docker-compose.yml         # Docker Compose til lokal udvikling
+├── Makefile                   # Build & deployment automatisering
+└── .env.example              # Miljøskabelon
 ```
 
-## Language Settings
+## Sprogindstillinger
 
-The Settings page (`/settings`) allows administrators to:
+Via Indstillingssiden (`/settings`) kan administratorer:
 
-1. **Enable/disable languages** - Choose which languages appear in the translator
-2. **Select TTS voices** - Pick from multiple voice options per language
-3. **Configure AI models** - Choose transcription, translation, and summary models per language
+1. Aktivere eller deaktivere sprog, der skal vises i oversætteren
+2. Vælge TTS-stemmer fra de tilgængelige indstillinger per sprog
+3. Konfigurere AI-modeller til transskription, oversættelse og sammenfatning per sprog
 
-### First-Time Setup
+### Første Gangs Opsætning
 
-On first launch, click "Seed Languages" in the Settings page to populate the database with all available Azure voices. 15 common languages are enabled by default.
+Ved første opstart kan du klikke på "Seed Languages" i Indstillingssiden for at indlæse alle tilgængelige Azure stemmer i databasen. 15 almindelige sprog er aktiveret som standard.
 
-## Configuration
+## Konfiguration
 
-See [SETUP.md](SETUP.md) for detailed configuration instructions including:
+Se [SETUP.md](SETUP.md) for detaljerede konfigurationsinstruktioner om:
 
-- Database setup (MySQL)
-- Azure Cognitive Services configuration
+- Database opsætning (MySQL)
+- Azure Cognitive Services konfiguration
 - Azure OpenAI deployment
-- Docker deployment options
-- Production considerations
+- Docker deployment muligheder
+- Produktionshensyn
 
-## Development
+## Udvikling
 
-### Running Tests
+### Tests
 
 ```bash
 make test
 ```
 
-### Code Quality
+### Kodekvalitet
 
 ```bash
-# Format code
+# Formater kode
 black python-be/src
 
 # Lint
@@ -212,45 +209,41 @@ flake8 python-be/src
 
 ### Azure Deployment
 
-Two options for deploying to Azure:
+Der er to muligheder for at deploye til Azure:
 
-| Option | Best For |
+| Mulighed | Beskrivelse |
 |--------|----------|
-| **Azure VM + Docker Compose** | Simple setup, full control, all-in-one |
-| **Azure Web App + Azure MySQL** | Production, auto-scaling, managed services |
+| **Azure VM + Docker Compose** | Simpel opsætning med fuld kontrol |
+| **Azure Web App + Azure MySQL** | Administreret løsning med auto-scaling |
 
-**Quick Deploy (VM approach):**
+**Deploy på Azure VM:**
 ```bash
-# On your Azure VM (Ubuntu 22.04):
+# På din Azure VM (Ubuntu 22.04):
 curl -fsSL https://get.docker.com | sh
 git clone https://github.com/kalundborgkommune/KK-AI-Translator-V1-OS.git
 cd KK-AI-Translator-V1-OS
-cp .env.example .env  # Add your Azure credentials
+cp .env.example .env  # Tilføj dine Azure-legitimationsoplysninger
 docker compose up -d
 ```
 
-**Quick Deploy (Serverless approach):**
+**Deploy som Azure Web App:**
 ```bash
-# Build, push to Azure Container Registry, and deploy
+# Byg, push til Azure Container Registry, og deploy
 make build-full
 make push-full
 make deploy-full
 ```
 
-See [SETUP.md](SETUP.md#azure-deployment) for detailed step-by-step instructions including Azure MySQL setup, SSL configuration, and continuous deployment.
+Se [SETUP.md](SETUP.md#azure-deployment) for detaljerede trin-for-trin instruktioner inklusive Azure MySQL opsætning, SSL-konfiguration og kontinuerlig deployment.
 
-## Contributing
+## Bidrag
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Bidrag er velkomne. Se [CONTRIBUTING.md](CONTRIBUTING.md) for retningslinjer.
 
-## License
+## Licens
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Dette projekt er licenseret under MIT License. Se [LICENSE](LICENSE) filen for detaljer.
 
-## V2 information
+## Kommerciel Version
 
-This is the open-source version (V1) of KK AI Translator. To try V2, please contact us.
-
----
-
-Built with care for real-world bilingual communication needs.
+Dette er open source versionen (V1) af KK AI Translator. Kalundborg Kommune bruger en v2 som er lukket. V1 skal bruges under eget ansvar med de juridiske afklaringer der kræves for at bruge AI til sagsbehandling.
