@@ -4,6 +4,12 @@ Et oversættelsesværktøj med taletransskription, AI-oversættelse og tekst-til
 
 Platformen er udviklet til brug til hverdags tolkning/oversættelse. Løsningen er første version bygget i Kalundborg og baseret sig på modeller hosted i Azure (Whisper v3 og GPT4o). Whisper kan også køres lokalt og der kan bruges en lokal model som Mistral  (Kalundborg har en v2 som køre lokalt)
 
+![Andrea app oversigt](docs/images/andrea-app-overview.png)
+
+![Oversætter interface](docs/images/translator-interface.png)
+
+Her vist indlejret i Kalundborg Kommunes Andrea app - løsningen kører lokalt og nem at indlejre i andre løsninger
+
 ## Funktioner
 
 - **Taletransskription** - Konverterer tale til tekst ved hjælp af Azure Speech Services eller Whisper
@@ -17,7 +23,6 @@ Platformen er udviklet til brug til hverdags tolkning/oversættelse. Løsningen 
 ## Understøttede Sprog
 
 15 sprog er aktiveret som standard:
-
 | Sprog | Kode |
 |----------|------|
 | Arabic (Saudi Arabia) | ar-SA |
